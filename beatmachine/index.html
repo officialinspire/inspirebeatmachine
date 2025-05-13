@@ -62,5 +62,22 @@
     </div>
     
     <script src="js/index.js"></script>
+    <!-- Add this just before the closing </body> tag -->
+<script>
+  // Send height to parent
+  function updateParentHeight() {
+    const height = document.body.scrollHeight;
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ height: height }, '*');
+    }
+  }
+  
+  // Update on load and whenever content changes
+  window.addEventListener('load', updateParentHeight);
+  window.addEventListener('resize', updateParentHeight);
+  
+  // Update periodically
+  setInterval(updateParentHeight, 500);
+</script>
 </body>
 </html>
