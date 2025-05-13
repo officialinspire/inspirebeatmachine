@@ -1,0 +1,376 @@
+/* Base and Typography */
+:root {
+    --primary-color: #00ffe5;
+    --secondary-color: #ff00a0;
+    --bg-dark: #121212;
+    --bg-darker: #0a0a0a;
+    --bg-light: #1e1e1e;
+    --text-color: #ffffff;
+    --border-glow: 0 0 10px var(--primary-color);
+    --accent-color: #7b00ff;
+    --grid-bg: rgba(10, 10, 15, 0.9);
+    --grid-border: #2a2a3a;
+    --button-active: var(--primary-color);
+    --button-hover: rgba(0, 255, 229, 0.2);
+    --button-ticked: #00ff9d;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text-color);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px
+        ),
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(123, 0, 255, 0.1) 0%,
+            rgba(0, 0, 0, 0) 70%
+        );
+    z-index: -1;
+}
+
+/* Header and Sidebar */
+.inspire-header {
+    background: var(--bg-darker);
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    border-bottom: 1px solid var(--primary-color);
+    box-shadow: 0 2px 15px rgba(0, 255, 229, 0.15);
+    position: relative;
+    z-index: 100;
+    margin-left: 20px;
+}
+
+.header-title {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin: 0 0 0 1rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 229, 0.6);
+}
+
+.logo {
+    height: 2.5rem;
+}
+
+.header-right {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background: var(--bg-darker);
+    border-right: 1px solid var(--primary-color);
+    z-index: 200;
+    padding-top: 5rem;
+    transition: transform 0.3s ease;
+    transform: translateX(-180px);
+}
+
+.sidebar:hover {
+    transform: translateX(0);
+}
+
+.sidebar-button {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    border-bottom: 1px solid rgba(0, 255, 229, 0.2);
+    transition: all 0.2s ease;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.sidebar-button:hover {
+    background: rgba(0, 255, 229, 0.1);
+    color: var(--primary-color);
+    padding-left: 1.5rem;
+}
+
+/* Main Container */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    margin-left: 20px;
+}
+
+/* Beat Maker Layout */
+.beat-maker-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 1.5rem;
+}
+
+.instrument-labels {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-right: 15px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.instrument-label {
+    height: 30px;
+    margin: 4px 0;
+    color: var(--primary-color);
+    text-shadow: 0 0 5px var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.9rem;
+}
+
+/* Grid and Beat Display */
+.grid-container {
+    flex: 1;
+    background: var(--grid-bg);
+    border-radius: 8px;
+    border: 1px solid var(--grid-border);
+    box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(16, 30px);
+    gap: 8px;
+    min-width: 800px;
+}
+
+.grid button {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    padding: 0;
+    height: 30px;
+    position: relative;
+    outline: none;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 3px rgba(0, 255, 229, 0.3);
+}
+
+.grid button:hover {
+    background: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.grid button.on {
+    background: var(--button-active);
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+.grid button.on:hover {
+    background: rgba(0, 255, 229, 0.8);
+}
+
+.grid button.ticked {
+    background: var(--button-ticked);
+    box-shadow: 0 0 12px var(--button-ticked);
+}
+
+.grid button.ticked:hover {
+    background: rgba(0, 255, 157, 0.8);
+}
+
+/* Controls */
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    background: var(--bg-dark);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
+}
+
+.tempo-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 2.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-darker);
+    border-radius: 5px;
+    min-width: 100px;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(0, 255, 229, 0.6);
+}
+
+.tempo-slider-container {
+    width: 180px;
+}
+
+.tempo-slider {
+    width: 100%;
+    height: 8px;
+    appearance: none;
+    background: var(--bg-darker);
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
+.tempo-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+.tempo-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tempo-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    background: var(--bg-darker);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 0 0 5px var(--primary-color);
+}
+
+.tempo-btn:hover {
+    background: var(--button-hover);
+    box-shadow: 0 0 8px rgba(0, 255, 229, 0.4);
+}
+
+.playback-controls {
+    margin: 0 1rem;
+}
+
+.control-button {
+    background: var(--bg-darker);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-shadow: 0 0 5px var(--primary-color);
+    min-width: 80px;
+    height: 40px;
+}
+
+.control-button:hover {
+    background: var(--button-hover);
+    box-shadow: 0 0 10px rgba(0, 255, 229, 0.4);
+}
+
+#play-pause {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.pattern-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Footer */
+.inspire-footer {
+    background: var(--bg-darker);
+    color: var(--text-color);
+    text-align: center;
+    padding: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    border-top: 1px solid var(--primary-color);
+    margin-top: 2rem;
+    margin-left: 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 1100px) {
+    .beat-maker-container {
+        flex-direction: column;
+    }
+    
+    .instrument-labels {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .instrument-label {
+        min-width: 100px;
+        margin: 0 10px;
+        justify-content: center;
+    }
+    
+    .grid-container {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+    }
+    
+    .grid button {
+        height: 25px;
+    }
+}

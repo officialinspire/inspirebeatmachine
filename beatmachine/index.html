@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥁 INSPIRE | BEAT MACHINE 🥁</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="/moment.min.js"></script>
+    <script src="/moment-timezone.js"></script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <a href="https://192.168.0.136" class="sidebar-button">🏠 HOME</a>
+        <a href="/index.html" class="sidebar-button">🛠️ TEAM TOOLS</a>
+    </nav>
+    
+    <!-- HEADER BAR -->
+    <header class="inspire-header">
+        <img src="../img/inspire-logo.png" alt="INSPIRE Logo" class="logo">
+        <h1 class="header-title">INSPIRE | BEAT MACHINE</h1>
+        <div class="header-right" id="header-info"></div>
+    </header>
+    <script src="/ip-info.js"></script>
+    
+    <div class="main-container">
+        <div class="controls-container">
+            <div class="tempo-display">
+                <span id="tempo-value">120</span>
+            </div>
+            <div class="tempo-slider-container">
+                <input type="range" min="60" max="200" value="120" class="tempo-slider" id="tempo-slider">
+            </div>
+            <div class="tempo-buttons">
+                <button id="tempo-down" class="tempo-btn">-</button>
+                <button id="tempo-up" class="tempo-btn">+</button>
+            </div>
+            
+            <div class="playback-controls">
+                <button id="play-pause" class="control-button">
+                    <span class="pause-icon">❚❚</span>
+                </button>
+            </div>
+            
+            <div class="pattern-controls">
+                <button id="clear" class="control-button">CLEAR</button>
+                <button id="random" class="control-button">RANDOM</button>
+                <button id="export" class="control-button">EXPORT</button>
+                <a id="download_link" style="display:none"></a>
+            </div>
+        </div>
+        
+        <div class="beat-maker-container">
+            <div class="instrument-labels">
+                <div class="instrument-label">bass_drum</div>
+                <div class="instrument-label">snare_drum</div>
+                <div class="instrument-label">low_tom</div>
+                <div class="instrument-label">mid_tom</div>
+                <div class="instrument-label">hi_tom</div>
+                <div class="instrument-label">rim_shot</div>
+                <div class="instrument-label">hand_clap</div>
+                <div class="instrument-label">cowbell</div>
+                <div class="instrument-label">cymbal</div>
+                <div class="instrument-label">o_hi_hat</div>
+                <div class="instrument-label">cl_hi_hat</div>
+                <div class="instrument-label">low_conga</div>
+                <div class="instrument-label">mid_conga</div>
+                <div class="instrument-label">hi_conga</div>
+                <div class="instrument-label">claves</div>
+                <div class="instrument-label">maracas</div>
+            </div>
+            <div class="grid-container">
+                <div class="grid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="inspire-footer">
+        🌐 INSPIRE HQ — MESHSTORM OPS // FXBG LOCALNET // Offline Capable
+    </footer>
+    
+    <script src="js/index.js"></script>
+</body>
+</html>
