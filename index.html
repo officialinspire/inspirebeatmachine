@@ -36,8 +36,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
             position: relative;
+            padding: 20px;
         }
 
         body:before {
@@ -68,10 +68,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem 1rem;
             width: 100%;
             max-width: 1200px;
-            margin: 0 auto;
         }
 
         .app-title {
@@ -80,6 +78,7 @@
             text-shadow: 0 0 15px var(--primary-color);
             margin-bottom: 2rem;
             letter-spacing: 2px;
+            text-align: center;
         }
 
         /* Control Panel */
@@ -130,7 +129,6 @@
             background: var(--bg-light);
             border-radius: 3px;
             outline: none;
-            position: relative;
         }
 
         .tempo-slider::-webkit-slider-thumb {
@@ -171,14 +169,12 @@
         }
 
         /* Control Buttons */
-        .button-controls {
+        .controls-row {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .play-control {
-            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         .control-button {
@@ -186,11 +182,11 @@
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
             border-radius: 5px;
-            padding: 0.5rem 1.5rem;
+            padding: 0.7rem 1.5rem;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            min-width: 100px;
+            min-width: 80px;
             text-align: center;
             font-family: 'Share Tech Mono', monospace;
         }
@@ -208,108 +204,66 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            padding: 0;
         }
 
-        /* Beat Grid and Labels */
-        .beat-container {
+        /* Beat Grid */
+        .beat-grid-container {
             width: 100%;
-            display: flex;
-            margin-top: 1rem;
-            position: relative;
-            overflow-x: auto;
-        }
-
-        .instrument-scroll {
-            display: flex;
-            width: 100%;
-            max-width: 100%;
-            overflow-x: auto;
             border-radius: 10px;
             background: var(--grid-bg);
             border: 1px solid var(--primary-color);
             box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
             padding: 1.5rem;
-            position: relative;
+            overflow-x: auto;
         }
 
-        .instrument-labels {
-            display: flex;
-            flex-wrap: nowrap;
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 120px;
-            z-index: 10;
-        }
-
-        .instrument-column {
-            display: flex;
-            flex-direction: column;
-            min-width: 120px;
-            justify-content: space-around;
-            padding: 1.5rem 0;
+        .beat-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(16, minmax(40px, 1fr));
+            gap: 6px;
+            min-width: 900px;
         }
 
         .instrument-label {
             color: var(--primary-color);
             text-shadow: 0 0 5px var(--primary-color);
-            height: 30px;
             display: flex;
             align-items: center;
-            font-size: 0.8rem;
-            white-space: nowrap;
+            font-size: 0.9rem;
+            padding-right: 10px;
+            justify-content: flex-end;
         }
 
-        .grid-wrapper {
-            margin-left: 120px;
-            flex: 1;
-            overflow-x: auto;
-            padding-bottom: 1rem;
+        .beat-row {
+            display: contents;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(16, minmax(40px, 1fr));
-            grid-auto-rows: 30px;
-            gap: 8px;
-            min-width: 800px;
-        }
-
-        .grid button {
+        .beat-cell {
+            height: 30px;
             background: transparent;
             border: 2px solid var(--primary-color);
-            padding: 0;
-            position: relative;
-            outline: none;
             border-radius: 3px;
+            cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 0 3px rgba(0, 255, 229, 0.3);
         }
 
-        .grid button:hover {
+        .beat-cell:hover {
             background: var(--button-hover);
         }
 
-        .grid button.on {
+        .beat-cell.on {
             background: var(--button-active);
             box-shadow: 0 0 8px var(--primary-color);
         }
 
-        .grid button.on:hover {
-            background: rgba(0, 255, 229, 0.8);
-        }
-
-        .grid button.ticked {
+        .beat-cell.ticked {
             background: var(--button-ticked);
             box-shadow: 0 0 12px var(--button-ticked);
         }
 
-        .grid button.ticked:hover {
-            background: rgba(0, 255, 157, 0.8);
-        }
-
-        .inspired-by {
+        .credits {
             margin-top: 2rem;
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.6);
@@ -326,19 +280,31 @@
                 width: 250px;
             }
             
-            .button-controls {
-                flex-wrap: wrap;
-                justify-content: center;
+            .tempo-display {
+                font-size: 2.5rem;
+            }
+            
+            .app-title {
+                font-size: 2rem;
             }
         }
 
         @media (max-width: 768px) {
-            .app-title {
-                font-size: 2rem;
+            .beat-grid-container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .beat-grid {
+                min-width: 700px;
+            }
+            
+            .instrument-label {
+                font-size: 0.8rem;
             }
             
             .tempo-display {
-                font-size: 2.5rem;
+                font-size: 2rem;
+                min-width: 100px;
             }
         }
     </style>
@@ -361,13 +327,13 @@
                 </div>
             </div>
             
-            <div class="play-control">
+            <div class="controls-row">
                 <button id="play-pause" class="control-button">
                     <span class="pause-icon">❚❚</span>
                 </button>
             </div>
             
-            <div class="button-controls">
+            <div class="controls-row">
                 <button id="clear" class="control-button">CLEAR</button>
                 <button id="random" class="control-button">RANDOM</button>
                 <button id="export" class="control-button">EXPORT</button>
@@ -375,35 +341,11 @@
             </div>
         </div>
         
-        <div class="beat-container">
-            <div class="instrument-scroll">
-                <div class="instrument-labels">
-                    <div class="instrument-column">
-                        <div class="instrument-label">bass_drum</div>
-                        <div class="instrument-label">snare_drum</div>
-                        <div class="instrument-label">low_tom</div>
-                        <div class="instrument-label">mid_tom</div>
-                        <div class="instrument-label">hi_tom</div>
-                        <div class="instrument-label">rim_shot</div>
-                        <div class="instrument-label">hand_clap</div>
-                        <div class="instrument-label">cowbell</div>
-                        <div class="instrument-label">cymbal</div>
-                        <div class="instrument-label">o_hi_hat</div>
-                        <div class="instrument-label">cl_hi_hat</div>
-                        <div class="instrument-label">low_conga</div>
-                        <div class="instrument-label">mid_conga</div>
-                        <div class="instrument-label">hi_conga</div>
-                        <div class="instrument-label">claves</div>
-                        <div class="instrument-label">maracas</div>
-                    </div>
-                </div>
-                <div class="grid-wrapper">
-                    <div class="grid"></div>
-                </div>
-            </div>
+        <div class="beat-grid-container">
+            <div class="beat-grid" id="beat-grid"></div>
         </div>
         
-        <div class="inspired-by">
+        <div class="credits">
             Created by INSPIRE HQ — MESHSTORM OPS
         </div>
     </div>
@@ -449,12 +391,40 @@
           }
 
           // Initialize UI elements
-          var $grid = document.querySelector('.grid');
+          var $beatGrid = document.getElementById('beat-grid');
           var $tempoValue = document.getElementById('tempo-value');
           var $tempoSlider = document.getElementById('tempo-slider');
           var $tempoUp = document.getElementById('tempo-up');
           var $tempoDown = document.getElementById('tempo-down');
           var $playPause = document.getElementById('play-pause');
+          
+          // Create beat grid with HTML structure
+          function createBeatGrid() {
+              for (var r = 0; r < sounds.length; r++) {
+                  var soundname = sounds[r].split('.')[0];
+                  
+                  // Create label cell
+                  var labelCell = document.createElement('div');
+                  labelCell.className = 'instrument-label';
+                  labelCell.textContent = soundname.replace('_', ' ');
+                  $beatGrid.appendChild(labelCell);
+                  
+                  // Create beat cells for this row
+                  for (var c = 0; c < TICKS; c++) {
+                      var beatCell = document.createElement('div');
+                      beatCell.className = 'beat-cell';
+                      beatCell.dataset.row = r;
+                      beatCell.dataset.col = c;
+                      beatCell.dataset.sound = soundname;
+                      
+                      beatCell.addEventListener('click', function() {
+                          this.classList.toggle('on');
+                      });
+                      
+                      $beatGrid.appendChild(beatCell);
+                  }
+              }
+          }
           
           // Function to play sound
           var playSound = function (index) {
@@ -499,34 +469,15 @@
             }
           };
           
-          // Create grid buttons
-          var slength = sounds.length;
-          var $button = document.createElement('button');
-          $button.classList.add('beat');
-
-          for (var r = 0; r < slength; r++) {
-            for (var c = 0; c < TICKS; c++) {
-              var _$button = $button.cloneNode(true);
-              if (c === 0) {
-                _$button.classList.add('first');
-              }
-              // add a class based on the instrument
-              var soundname = sounds[r].split('.')[0];
-              _$button.classList.add(soundname);
-              _$button.dataset.instrument = soundname;
-
-              _$button.addEventListener('click', function() {
-                this.classList.toggle('on');
-              }, false);
-              $grid.appendChild(_$button);
-            }
-          }
-
-          var $beats = document.querySelectorAll('.beat');
+          // Create the grid
+          createBeatGrid();
+          
+          // Get all beat cells
+          var $beatCells = document.querySelectorAll('.beat-cell');
 
           // Clear grid
           var clearBeat = function() {
-            var $onbeats = document.querySelectorAll('.beat.on');
+            var $onbeats = document.querySelectorAll('.beat-cell.on');
             if (!$onbeats.length) return;
             
             for (var i = 0; i < $onbeats.length; i++) {
@@ -539,11 +490,12 @@
           var setRandomBeat = function() {
             clearBeat();
 
-            for (var r = 0; r < slength; r++) {
+            for (var r = 0; r < sounds.length; r++) {
               for (var c = 0; c < TICKS; c++) {
+                var cell = document.querySelector(`.beat-cell[data-row="${r}"][data-col="${c}"]`);
                 var num = Math.ceil(Math.random() * 100) % 3;
-                if (num === 0) {
-                  $beats[c + (r * TICKS)].classList.toggle('on');
+                if (num === 0 && cell) {
+                  cell.classList.add('on');
                 }
               }
             }
@@ -552,40 +504,29 @@
 
           // Export pattern as JSON
           var exportBeat = function () {
-            // create an object so we can jsonify it later
-            var exportData = {}
-            // for each row (sound)
-            sounds.forEach(function (sound) {
-              // get the soundname, without .wav
-              var soundname = sound.split('.')[0];
-
-              // create arrays
-              var cellsgrouped = [];
-
-              // this will give us [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-              var cellsbuffer = Array.apply(null, Array(TICKS)).map(Number.prototype.valueOf,0);
-
-              // set the size of a group
-              var groupsize = 4;
-
-              // select all of the cells in the beat maker by the current soundname
-              var cells = document.querySelectorAll(`.beat.${soundname}`);
-
-              // loop over the cells
-              for (var i=0; i<cells.length;i++) {
-                // if it's on, the value is 1
-                if (cells[i].classList.contains('on')) {
-                  cellsbuffer[i] = 1;
+            var exportData = {};
+            
+            for (var r = 0; r < sounds.length; r++) {
+              var soundname = sounds[r].split('.')[0];
+              var cellsbuffer = Array(TICKS).fill(0);
+              
+              for (var c = 0; c < TICKS; c++) {
+                var cell = document.querySelector(`.beat-cell[data-row="${r}"][data-col="${c}"]`);
+                if (cell && cell.classList.contains('on')) {
+                  cellsbuffer[c] = 1;
                 }
               }
-              // group the cells in to sets
-              // this will give us [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-              while (cellsbuffer.length > 0) {
-                cellsgrouped.push(cellsbuffer.splice(0, groupsize));
+              
+              // Group cells in sets of 4
+              var cellsgrouped = [];
+              var groupsize = 4;
+              
+              for (var i = 0; i < cellsbuffer.length; i += groupsize) {
+                cellsgrouped.push(cellsbuffer.slice(i, i + groupsize));
               }
-              // update the object
+              
               exportData[soundname] = cellsgrouped;
-            });
+            }
 
             // create json that can be downloaded
             var data_string = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData));
@@ -663,15 +604,15 @@
             var tickTime = 60000 / (BPM * 4); // Calculate time per tick based on BPM
             
             interval = requestInterval(function() {
-              for (var i = 0; i < slength; i++) {
-                var lastBeat = $beats[i * TICKS + lastTick];
-                var currentBeat = $beats[i * TICKS + currentTick];
+              for (var r = 0; r < sounds.length; r++) {
+                var lastCell = document.querySelector(`.beat-cell[data-row="${r}"][data-col="${lastTick}"]`);
+                var currentCell = document.querySelector(`.beat-cell[data-row="${r}"][data-col="${currentTick}"]`);
                 
-                if (lastBeat) lastBeat.classList.remove('ticked');
-                if (currentBeat) {
-                    currentBeat.classList.add('ticked');
-                    if (currentBeat.classList.contains('on')) {
-                        playSound(i);
+                if (lastCell) lastCell.classList.remove('ticked');
+                if (currentCell) {
+                    currentCell.classList.add('ticked');
+                    if (currentCell.classList.contains('on')) {
+                        playSound(r);
                     }
                 }
               }
