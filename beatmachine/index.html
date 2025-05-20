@@ -1,83 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSPIRE | BEAT MACHINE</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>INSPIRE | BEAT MACHINE</title>
+  <!-- Import the required fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="/moment.min.js"></script>
+  <script src="/moment-timezone.js"></script>
 </head>
 <body>
-    <div class="main-container">
-        <div class="controls-container">
-            <div class="tempo-display">
-                <span id="tempo-value">120</span>
-            </div>
-            <div class="tempo-slider-container">
-                <input type="range" min="60" max="200" value="120" class="tempo-slider" id="tempo-slider">
-            </div>
-            <div class="tempo-buttons">
-                <button id="tempo-down" class="tempo-btn">-</button>
-                <button id="tempo-up" class="tempo-btn">+</button>
-            </div>
-            
-            <div class="playback-controls">
-                <button id="play-pause" class="control-button">
-                    <span class="pause-icon">❚❚</span>
-                </button>
-            </div>
-            
-            <div class="pattern-controls">
-                <button id="clear" class="control-button">CLEAR</button>
-                <button id="random" class="control-button">RANDOM</button>
-                <button id="export" class="control-button">EXPORT</button>
-                <a id="download_link" style="display:none"></a>
-            </div>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <a href="https://192.168.0.136" class="sidebar-button">🏠 HOME</a>
+    <a href="https://192.168.0.136:3000/" class="sidebar-button">📡 MESHTASTIC</a>
+    <a href="http://192.168.0.136:1880/ui/" class="sidebar-button">🔄 NODE-RED</a>
+    <a href="/index.html" class="sidebar-button">🛠️ TEAM TOOLS</a>
+    <a href="https://192.168.0.136:8080/" class="sidebar-button">🗄️ ARCHIVE</a>
+    <a href="https://192.168.0.136:9000/" class="sidebar-button">⚙️ ADMIN PANEL</a>
+  </nav>
+
+  <!-- Mobile Top Menu (fixed to top, shown only on mobile) -->
+  <div class="mobile-top-menu">
+    <div class="mobile-menu-btn">☰</div>
+    <div class="mobile-title">BEAT MACHINE</div>
+    <div class="playback-indicator" id="mobile-playback-status"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="inspire-interface">
+      <!-- Interface Header with Logo -->
+      <div class="interface-header">
+        <div class="inspire-logo">
+          <img src="../img/inspire-logo.png" alt="INSPIRE Logo" class="logo-img">
+        </div>
+        <div class="interface-title">
+          <h1>BEAT<span class="accent">_</span>MACHINE</h1>
+          <div class="subtitle">// RHYTHM PROGRAMMING MODULE</div>
+        </div>
+        <div class="playback-status" id="playback-status">PLAYBACK PAUSED</div>
+      </div>
+
+      <!-- Interface Status Bar -->
+      <div class="status-bar">
+        <div class="status-indicator online">SEQUENCER ONLINE</div>
+        <div class="status-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="status-code" id="header-info">🌐 WAN: LOADING... // LAN: LOADING... // TEAM INSPIRE</div>
+      </div>
+      
+      <!-- Beat Machine Module -->
+      <div class="beat-machine-module">
+        <!-- Section Selector -->
+        <div class="section-selector">
+          <h2 class="module-title">// PATTERN SECTIONS</h2>
+          <div class="section-tabs">
+            <button class="section-tab active" data-section="main">MAIN</button>
+            <button class="section-tab" data-section="intro">INTRO</button>
+            <button class="section-tab" data-section="verse">VERSE</button>
+            <button class="section-tab" data-section="chorus">CHORUS</button>
+            <button class="section-tab" data-section="outro">OUTRO</button>
+          </div>
         </div>
         
-        <div class="beat-maker-container">
-            <div class="instrument-labels">
-                <div class="instrument-label">bass_drum</div>
-                <div class="instrument-label">snare_drum</div>
-                <div class="instrument-label">low_tom</div>
-                <div class="instrument-label">mid_tom</div>
-                <div class="instrument-label">hi_tom</div>
-                <div class="instrument-label">rim_shot</div>
-                <div class="instrument-label">hand_clap</div>
-                <div class="instrument-label">cowbell</div>
-                <div class="instrument-label">cymbal</div>
-                <div class="instrument-label">o_hi_hat</div>
-                <div class="instrument-label">cl_hi_hat</div>
-                <div class="instrument-label">low_conga</div>
-                <div class="instrument-label">mid_conga</div>
-                <div class="instrument-label">hi_conga</div>
-                <div class="instrument-label">claves</div>
-                <div class="instrument-label">maracas</div>
+        <!-- Controls Panel -->
+        <div class="module-container">
+          <h2 class="module-title">// PLAYBACK CONTROLS</h2>
+          <div class="controls-panel">
+            <div class="control-group tempo-group">
+              <div class="control-label">TEMPO</div>
+              <div class="tempo-display">
+                <div class="tempo-value" id="tempo-value">120</div>
+                <div class="tempo-label">BPM</div>
+              </div>
+              
+              <div class="tempo-controls">
+                <div class="tempo-slider-container">
+                  <input type="range" min="60" max="200" value="120" class="tempo-slider" id="tempo-slider">
+                </div>
+                <div class="tempo-buttons">
+                  <button id="tempo-down" class="control-btn">-</button>
+                  <button id="tempo-up" class="control-btn">+</button>
+                </div>
+              </div>
             </div>
-            <div class="grid-container">
-                <div class="grid"></div>
+            
+            <div class="control-group playback-group">
+              <div class="control-label">PLAYBACK</div>
+              <div class="playback-controls">
+                <button id="play-pause" class="control-btn primary large">
+                  <span class="play-icon">▶</span>
+                </button>
+              </div>
             </div>
+            
+            <div class="control-group pattern-group">
+              <div class="control-label">PATTERN</div>
+              <div class="pattern-controls">
+                <button id="clear" class="control-btn wide">CLEAR</button>
+                <button id="random" class="control-btn wide">RANDOM</button>
+                <button id="export" class="control-btn wide">EXPORT</button>
+                <a id="download_link" style="display:none"></a>
+              </div>
+            </div>
+          </div>
         </div>
+        
+        <!-- Beat Grid -->
+        <div class="beat-maker-wrap">
+          <h2 class="module-title">// BEAT GRID</h2>
+          
+          <!-- Mobile Instrument Select -->
+          <div class="mobile-instrument-select">
+            <label for="mobile-instrument-dropdown">INSTRUMENT:</label>
+            <select id="mobile-instrument-dropdown" class="option-select"></select>
+          </div>
+          
+          <div class="beat-maker-container">
+            <div class="instrument-labels">
+              <div class="instrument-label" data-instrument="bass_drum">BASS DRUM</div>
+              <div class="instrument-label" data-instrument="snare_drum">SNARE DRUM</div>
+              <div class="instrument-label" data-instrument="low_tom">LOW TOM</div>
+              <div class="instrument-label" data-instrument="mid_tom">MID TOM</div>
+              <div class="instrument-label" data-instrument="hi_tom">HI TOM</div>
+              <div class="instrument-label" data-instrument="rim_shot">RIM SHOT</div>
+              <div class="instrument-label" data-instrument="hand_clap">HAND CLAP</div>
+              <div class="instrument-label" data-instrument="cowbell">COWBELL</div>
+              <div class="instrument-label" data-instrument="cymbal">CYMBAL</div>
+              <div class="instrument-label" data-instrument="o_hi_hat">OPEN HI-HAT</div>
+              <div class="instrument-label" data-instrument="cl_hi_hat">CLOSED HI-HAT</div>
+              <div class="instrument-label" data-instrument="low_conga">LOW CONGA</div>
+              <div class="instrument-label" data-instrument="mid_conga">MID CONGA</div>
+              <div class="instrument-label" data-instrument="hi_conga">HI CONGA</div>
+              <div class="instrument-label" data-instrument="claves">CLAVES</div>
+              <div class="instrument-label" data-instrument="maracas">MARACAS</div>
+              <div class="instrument-label custom-sound" data-instrument="custom1">
+                <span>CUSTOM 1</span>
+                <label for="custom-sound-1" class="upload-btn">UPLOAD</label>
+                <input type="file" id="custom-sound-1" class="sound-upload" accept="audio/*">
+              </div>
+              <div class="instrument-label custom-sound" data-instrument="custom2">
+                <span>CUSTOM 2</span>
+                <label for="custom-sound-2" class="upload-btn">UPLOAD</label>
+                <input type="file" id="custom-sound-2" class="sound-upload" accept="audio/*">
+              </div>
+            </div>
+            
+            <div class="grid-container">
+              <div class="grid" id="beat-grid"></div>
+              <div class="panel-blinker"></div>
+            </div>
+          </div>
+          
+          <!-- Mobile Pattern Navigation -->
+          <div class="mobile-grid-navigation">
+            <div class="beat-page-indicator">
+              <span class="current-page">1</span>/<span class="total-pages">2</span>
+            </div>
+            <div class="beat-navigation-controls">
+              <button class="nav-btn prev-page">◀</button>
+              <button class="nav-btn next-page">▶</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Effects Module -->
+        <div class="module-container effects-module">
+          <h2 class="module-title">// AUDIO EFFECTS</h2>
+          <div class="effects-panel">
+            <div class="effect-group">
+              <div class="effect-label">DELAY</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">TIME</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="delay-time">
+                  <div class="slider-value" id="delay-time-value">0 ms</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">FEEDBACK</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="delay-feedback">
+                  <div class="slider-value" id="delay-feedback-value">0%</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="delay-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">REVERB</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">SIZE</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="reverb-size">
+                  <div class="slider-value" id="reverb-size-value">0%</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">MIX</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="reverb-mix">
+                  <div class="slider-value" id="reverb-mix-value">0%</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="reverb-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">FILTER</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">CUTOFF</div>
+                  <input type="range" min="20" max="20000" value="20000" class="effect-slider log-scale" id="filter-cutoff">
+                  <div class="slider-value" id="filter-cutoff-value">20000 Hz</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">RESONANCE</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="filter-q">
+                  <div class="slider-value" id="filter-q-value">0</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="filter-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">COMPRESSION</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">THRESHOLD</div>
+                  <input type="range" min="-60" max="0" value="0" class="effect-slider" id="comp-threshold">
+                  <div class="slider-value" id="comp-threshold-value">0 dB</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">RATIO</div>
+                  <input type="range" min="1" max="20" value="1" class="effect-slider" id="comp-ratio">
+                  <div class="slider-value" id="comp-ratio-value">1:1</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="comp-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- MIDI Keyboard Module -->
+        <div class="module-container keyboard-module">
+          <h2 class="module-title">// MIDI KEYBOARD</h2>
+          <div class="keyboard-controls">
+            <div class="preset-selector">
+              <div class="preset-label">SOUND</div>
+              <select id="keyboard-preset" class="option-select">
+                <option value="synth">SYNTH LEAD</option>
+                <option value="bass">BASS</option>
+                <option value="piano">E-PIANO</option>
+                <option value="pad">PAD</option>
+                <option value="pluck">PLUCK</option>
+              </select>
+            </div>
+            <div class="octave-controls">
+              <div class="octave-label">OCTAVE</div>
+              <div class="octave-buttons">
+                <button id="octave-down" class="control-btn">-</button>
+                <span id="octave-display" class="octave-display">4</span>
+                <button id="octave-up" class="control-btn">+</button>
+              </div>
+            </div>
+            <div class="keyboard-options">
+              <label class="option-checkbox">
+                <input type="checkbox" id="keyboard-hold">
+                <span class="checkbox-label">HOLD</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="midi-keyboard" id="midi-keyboard">
+            <!-- Keys will be generated by JavaScript -->
+          </div>
+          
+          <div class="keyboard-info">Use your computer keyboard (A-K, W-U) or click the keys to play. Press Z/X to change octaves.</div>
+        </div>
+        
+        <!-- Section Controls -->
+        <div class="section-controls">
+          <h2 class="module-title">// SECTION MANAGEMENT</h2>
+          <div class="section-control-buttons">
+            <button id="copy-section" class="control-btn wide">COPY SECTION</button>
+            <button id="paste-section" class="control-btn wide">PASTE SECTION</button>
+            <select id="section-select" class="option-select">
+              <option value="main">MAIN</option>
+              <option value="intro">INTRO</option>
+              <option value="verse">VERSE</option>
+              <option value="chorus">CHORUS</option>
+              <option value="outro">OUTRO</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Sequencer Timeline -->
+        <div class="sequencer-timeline">
+          <h2 class="module-title">// SEQUENCE ARRANGEMENT</h2>
+          <div class="timeline-container">
+            <div class="timeline-section intro">INTRO</div>
+            <div class="timeline-section verse">VERSE</div>
+            <div class="timeline-section chorus">CHORUS</div>
+            <div class="timeline-section verse">VERSE</div>
+            <div class="timeline-section chorus">CHORUS</div>
+            <div class="timeline-section outro">OUTRO</div>
+          </div>
+          <button id="play-sequence" class="control-btn wide primary">PLAY SEQUENCE</button>
+        </div>
+      </div>
+
+      <!-- Interface Footer -->
+      <div class="interface-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+          <div class="footer-text">🌐 INSPIRE HQ — MESHSTORM OPS // FXBG LOCALNET // Offline Capable</div>
+          <div class="footer-code">VER.3.0.2</div>
+        </div>
+      </div>
     </div>
-    
-    <script src="js/index.js"></script>
-    <!-- Add this just before the closing </body> tag -->
-<script>
-  // Send height to parent
-  function updateParentHeight() {
-    const height = document.body.scrollHeight;
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ height: height }, '*');
-    }
-  }
-  
-  // Update on load and whenever content changes
-  window.addEventListener('load', updateParentHeight);
-  window.addEventListener('resize', updateParentHeight);
-  
-  // Update periodically
-  setInterval(updateParentHeight, 500);
-</script>
+  </div>
+
+  <!-- Mobile Menu Overlay (shown when mobile menu button is clicked) -->
+  <div class="mobile-menu-overlay">
+    <div class="mobile-menu-close">✕</div>
+    <div class="mobile-menu-content">
+      <a href="https://192.168.0.136" class="mobile-menu-item">🏠 HOME</a>
+      <a href="https://192.168.0.136:3000/" class="mobile-menu-item">📡 MESHTASTIC</a>
+      <a href="http://192.168.0.136:1880/ui/" class="mobile-menu-item">🔄 NODE-RED</a>
+      <a href="/index.html" class="mobile-menu-item">🛠️ TEAM TOOLS</a>
+      <a href="https://192.168.0.136:8080/" class="mobile-menu-item">🗄️ ARCHIVE</a>
+      <a href="https://192.168.0.136:9000/" class="mobile-menu-item">⚙️ ADMIN PANEL</a>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- IP Info Injection -->
+  <script src="/ip-info.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>

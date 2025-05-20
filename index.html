@@ -1,604 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>INSPIRE | BEAT MACHINE</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #00ffe5;
-            --bg-dark: #0a0a0a;
-            --bg-darker: #000000;
-            --bg-lighter: #1a1a1a;
-            --grid-bg: rgba(10, 10, 15, 0.95);
-            --grid-border: #2a2a3a;
-            --button-active: var(--primary-color);
-            --button-hover: rgba(0, 255, 229, 0.2);
-            --button-ticked: #00ff9d;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: #fff;
-            font-family: 'Share Tech Mono', monospace;
-            padding: 0;
-            margin: 0;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 255, 229, 0.05) 0%, transparent 80%),
-                linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
-            z-index: -1;
-        }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px 10px;
-        }
-
-        .title {
-            color: var(--primary-color);
-            text-shadow: 0 0 15px var(--primary-color);
-            font-size: min(10vw, 3rem);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 600px;
-            background: var(--bg-darker);
-            border: 1px solid var(--primary-color);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
-        }
-
-        .tempo-display {
-            font-size: min(12vw, 3rem);
-            color: var(--primary-color);
-            text-shadow: 0 0 15px var(--primary-color);
-            background: var(--bg-dark);
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 5px 20px;
-            min-width: 120px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .tempo-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .tempo-slider {
-            flex: 1;
-            height: 8px;
-            -webkit-appearance: none;
-            background: var(--bg-lighter);
-            border-radius: 4px;
-            outline: none;
-            border: 1px solid var(--primary-color);
-        }
-
-        .tempo-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--primary-color);
-        }
-
-        .tempo-btn {
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
-            background: var(--bg-dark);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .control-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .ctrl-btn {
-            background: var(--bg-dark);
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            border-radius: 5px;
-            padding: 8px 15px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            min-width: 80px;
-            text-align: center;
-        }
-
-        #play-pause {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            padding: 0;
-        }
-
-        .grid-container {
-            width: 100%;
-            max-width: 800px;
-            overflow-x: auto;
-            background: var(--grid-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 0 20px rgba(0, 255, 229, 0.2);
-        }
-
-        .beat-grid {
-            display: grid;
-            grid-template-columns: auto repeat(16, minmax(35px, 1fr));
-            gap: 5px;
-            min-width: 700px;
-        }
-
-        .sound-label {
-            padding-right: 10px;
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            text-shadow: 0 0 5px var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .beat-btn {
-            height: 30px;
-            background: transparent;
-            border: 2px solid var(--primary-color);
-            border-radius: 3px;
-            cursor: pointer;
-            transition: background 0.1s;
-            box-shadow: 0 0 3px rgba(0, 255, 229, 0.3);
-        }
-
-        .beat-btn.on {
-            background: var(--primary-color);
-            box-shadow: 0 0 8px var(--primary-color);
-        }
-
-        .beat-btn.ticked {
-            background: var(--button-ticked);
-            box-shadow: 0 0 12px var(--button-ticked);
-        }
-
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        @media (max-width: 900px) {
-            .beat-grid {
-                min-width: 650px;
-            }
-            
-            .sound-label {
-                font-size: 0.7rem;
-            }
-            
-            .beat-btn {
-                height: 25px;
-            }
-            
-            .controls {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .app-container {
-                padding: 10px 5px;
-            }
-            
-            .beat-btn {
-                height: 22px;
-            }
-            
-            .title {
-                margin-bottom: 15px;
-            }
-            
-            .tempo-display {
-                padding: 5px 15px;
-            }
-            
-            .ctrl-btn {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>INSPIRE | BEAT MACHINE</title>
+  <!-- Import the required fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="/moment.min.js"></script>
+  <script src="/moment-timezone.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <h1 class="title">INSPIRE | BEAT MACHINE</h1>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <a href="https://192.168.0.136" class="sidebar-button">🏠 HOME</a>
+    <a href="https://192.168.0.136:3000/" class="sidebar-button">📡 MESHTASTIC</a>
+    <a href="http://192.168.0.136:1880/ui/" class="sidebar-button">🔄 NODE-RED</a>
+    <a href="/index.html" class="sidebar-button">🛠️ TEAM TOOLS</a>
+    <a href="https://192.168.0.136:8080/" class="sidebar-button">🗄️ ARCHIVE</a>
+    <a href="https://192.168.0.136:9000/" class="sidebar-button">⚙️ ADMIN PANEL</a>
+  </nav>
+
+  <!-- Mobile Top Menu (fixed to top, shown only on mobile) -->
+  <div class="mobile-top-menu">
+    <div class="mobile-menu-btn">☰</div>
+    <div class="mobile-title">BEAT MACHINE</div>
+    <div class="playback-indicator" id="mobile-playback-status"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="inspire-interface">
+      <!-- Interface Header with Logo -->
+      <div class="interface-header">
+        <div class="inspire-logo">
+          <img src="../img/inspire-logo.png" alt="INSPIRE Logo" class="logo-img">
+        </div>
+        <div class="interface-title">
+          <h1>BEAT<span class="accent">_</span>MACHINE</h1>
+          <div class="subtitle">// RHYTHM PROGRAMMING MODULE</div>
+        </div>
+        <div class="playback-status" id="playback-status">PLAYBACK PAUSED</div>
+      </div>
+
+      <!-- Interface Status Bar -->
+      <div class="status-bar">
+        <div class="status-indicator online">SEQUENCER ONLINE</div>
+        <div class="status-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="status-code" id="header-info">🌐 WAN: LOADING... // LAN: LOADING... // TEAM INSPIRE</div>
+      </div>
+      
+      <!-- Beat Machine Module -->
+      <div class="beat-machine-module">
+        <!-- Section Selector -->
+        <div class="section-selector">
+          <h2 class="module-title">// PATTERN SECTIONS</h2>
+          <div class="section-tabs">
+            <button class="section-tab active" data-section="main">MAIN</button>
+            <button class="section-tab" data-section="intro">INTRO</button>
+            <button class="section-tab" data-section="verse">VERSE</button>
+            <button class="section-tab" data-section="chorus">CHORUS</button>
+            <button class="section-tab" data-section="outro">OUTRO</button>
+          </div>
+        </div>
         
-        <div class="controls">
-            <div class="tempo-display" id="tempo-display">120</div>
-            
-            <div class="tempo-controls">
-                <button class="tempo-btn" id="tempo-down">-</button>
-                <input type="range" min="60" max="200" value="120" class="tempo-slider" id="tempo-slider">
-                <button class="tempo-btn" id="tempo-up">+</button>
+        <!-- Controls Panel -->
+        <div class="module-container">
+          <h2 class="module-title">// PLAYBACK CONTROLS</h2>
+          <div class="controls-panel">
+            <div class="control-group tempo-group">
+              <div class="control-label">TEMPO</div>
+              <div class="tempo-display">
+                <div class="tempo-value" id="tempo-value">120</div>
+                <div class="tempo-label">BPM</div>
+              </div>
+              
+              <div class="tempo-controls">
+                <div class="tempo-slider-container">
+                  <input type="range" min="60" max="200" value="120" class="tempo-slider" id="tempo-slider">
+                </div>
+                <div class="tempo-buttons">
+                  <button id="tempo-down" class="control-btn">-</button>
+                  <button id="tempo-up" class="control-btn">+</button>
+                </div>
+              </div>
             </div>
             
-            <button class="ctrl-btn" id="play-pause">❚❚</button>
-            
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="clear">Clear</button>
-                <button class="ctrl-btn" id="random">Random</button>
-                <button class="ctrl-btn" id="export">Export</button>
+            <div class="control-group playback-group">
+              <div class="control-label">PLAYBACK</div>
+              <div class="playback-controls">
+                <button id="play-pause" class="control-btn primary large">
+                  <span class="play-icon">▶</span>
+                </button>
+              </div>
             </div>
+            
+            <div class="control-group pattern-group">
+              <div class="control-label">PATTERN</div>
+              <div class="pattern-controls">
+                <button id="clear" class="control-btn wide">CLEAR</button>
+                <button id="random" class="control-btn wide">RANDOM</button>
+                <button id="export" class="control-btn wide">EXPORT</button>
+                <a id="download_link" style="display:none"></a>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <div class="grid-container">
-            <div class="beat-grid" id="beat-grid"></div>
+        <!-- Beat Grid -->
+        <div class="beat-maker-wrap">
+          <h2 class="module-title">// BEAT GRID</h2>
+          
+          <!-- Mobile Instrument Select -->
+          <div class="mobile-instrument-select">
+            <label for="mobile-instrument-dropdown">INSTRUMENT:</label>
+            <select id="mobile-instrument-dropdown" class="option-select"></select>
+          </div>
+          
+          <div class="beat-maker-container">
+            <div class="instrument-labels">
+              <div class="instrument-label" data-instrument="bass_drum">BASS DRUM</div>
+              <div class="instrument-label" data-instrument="snare_drum">SNARE DRUM</div>
+              <div class="instrument-label" data-instrument="low_tom">LOW TOM</div>
+              <div class="instrument-label" data-instrument="mid_tom">MID TOM</div>
+              <div class="instrument-label" data-instrument="hi_tom">HI TOM</div>
+              <div class="instrument-label" data-instrument="rim_shot">RIM SHOT</div>
+              <div class="instrument-label" data-instrument="hand_clap">HAND CLAP</div>
+              <div class="instrument-label" data-instrument="cowbell">COWBELL</div>
+              <div class="instrument-label" data-instrument="cymbal">CYMBAL</div>
+              <div class="instrument-label" data-instrument="o_hi_hat">OPEN HI-HAT</div>
+              <div class="instrument-label" data-instrument="cl_hi_hat">CLOSED HI-HAT</div>
+              <div class="instrument-label" data-instrument="low_conga">LOW CONGA</div>
+              <div class="instrument-label" data-instrument="mid_conga">MID CONGA</div>
+              <div class="instrument-label" data-instrument="hi_conga">HI CONGA</div>
+              <div class="instrument-label" data-instrument="claves">CLAVES</div>
+              <div class="instrument-label" data-instrument="maracas">MARACAS</div>
+              <div class="instrument-label custom-sound" data-instrument="custom1">
+                <span>CUSTOM 1</span>
+                <label for="custom-sound-1" class="upload-btn">UPLOAD</label>
+                <input type="file" id="custom-sound-1" class="sound-upload" accept="audio/*">
+              </div>
+              <div class="instrument-label custom-sound" data-instrument="custom2">
+                <span>CUSTOM 2</span>
+                <label for="custom-sound-2" class="upload-btn">UPLOAD</label>
+                <input type="file" id="custom-sound-2" class="sound-upload" accept="audio/*">
+              </div>
+            </div>
+            
+            <div class="grid-container">
+              <div class="grid" id="beat-grid"></div>
+              <div class="panel-blinker"></div>
+            </div>
+          </div>
+          
+          <!-- Mobile Pattern Navigation -->
+          <div class="mobile-grid-navigation">
+            <div class="beat-page-indicator">
+              <span class="current-page">1</span>/<span class="total-pages">2</span>
+            </div>
+            <div class="beat-navigation-controls">
+              <button class="nav-btn prev-page">◀</button>
+              <button class="nav-btn next-page">▶</button>
+            </div>
+          </div>
         </div>
         
-        <div class="footer">
-            <p>Created by INSPIRE HQ — MESHSTORM OPS</p>
+        <!-- Effects Module -->
+        <div class="module-container effects-module">
+          <h2 class="module-title">// AUDIO EFFECTS</h2>
+          <div class="effects-panel">
+            <div class="effect-group">
+              <div class="effect-label">DELAY</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">TIME</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="delay-time">
+                  <div class="slider-value" id="delay-time-value">0 ms</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">FEEDBACK</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="delay-feedback">
+                  <div class="slider-value" id="delay-feedback-value">0%</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="delay-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">REVERB</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">SIZE</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="reverb-size">
+                  <div class="slider-value" id="reverb-size-value">0%</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">MIX</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="reverb-mix">
+                  <div class="slider-value" id="reverb-mix-value">0%</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="reverb-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">FILTER</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">CUTOFF</div>
+                  <input type="range" min="20" max="20000" value="20000" class="effect-slider log-scale" id="filter-cutoff">
+                  <div class="slider-value" id="filter-cutoff-value">20000 Hz</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">RESONANCE</div>
+                  <input type="range" min="0" max="100" value="0" class="effect-slider" id="filter-q">
+                  <div class="slider-value" id="filter-q-value">0</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="filter-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="effect-group">
+              <div class="effect-label">COMPRESSION</div>
+              <div class="effect-controls">
+                <div class="slider-control">
+                  <div class="slider-label">THRESHOLD</div>
+                  <input type="range" min="-60" max="0" value="0" class="effect-slider" id="comp-threshold">
+                  <div class="slider-value" id="comp-threshold-value">0 dB</div>
+                </div>
+                <div class="slider-control">
+                  <div class="slider-label">RATIO</div>
+                  <input type="range" min="1" max="20" value="1" class="effect-slider" id="comp-ratio">
+                  <div class="slider-value" id="comp-ratio-value">1:1</div>
+                </div>
+                <div class="effect-toggle">
+                  <label class="toggle">
+                    <input type="checkbox" id="comp-active">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <a id="download-link" style="display:none;"></a>
+        <!-- MIDI Keyboard Module -->
+        <div class="module-container keyboard-module">
+          <h2 class="module-title">// MIDI KEYBOARD</h2>
+          <div class="keyboard-controls">
+            <div class="preset-selector">
+              <div class="preset-label">SOUND</div>
+              <select id="keyboard-preset" class="option-select">
+                <option value="synth">SYNTH LEAD</option>
+                <option value="bass">BASS</option>
+                <option value="piano">E-PIANO</option>
+                <option value="pad">PAD</option>
+                <option value="pluck">PLUCK</option>
+              </select>
+            </div>
+            <div class="octave-controls">
+              <div class="octave-label">OCTAVE</div>
+              <div class="octave-buttons">
+                <button id="octave-down" class="control-btn">-</button>
+                <span id="octave-display" class="octave-display">4</span>
+                <button id="octave-up" class="control-btn">+</button>
+              </div>
+            </div>
+            <div class="keyboard-options">
+              <label class="option-checkbox">
+                <input type="checkbox" id="keyboard-hold">
+                <span class="checkbox-label">HOLD</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="midi-keyboard" id="midi-keyboard">
+            <!-- Keys will be generated by JavaScript -->
+          </div>
+          
+          <div class="keyboard-info">Use your computer keyboard (A-K, W-U) or click the keys to play. Press Z/X to change octaves.</div>
+        </div>
+        
+        <!-- Section Controls -->
+        <div class="section-controls">
+          <h2 class="module-title">// SECTION MANAGEMENT</h2>
+          <div class="section-control-buttons">
+            <button id="copy-section" class="control-btn wide">COPY SECTION</button>
+            <button id="paste-section" class="control-btn wide">PASTE SECTION</button>
+            <select id="section-select" class="option-select">
+              <option value="main">MAIN</option>
+              <option value="intro">INTRO</option>
+              <option value="verse">VERSE</option>
+              <option value="chorus">CHORUS</option>
+              <option value="outro">OUTRO</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Sequencer Timeline -->
+        <div class="sequencer-timeline">
+          <h2 class="module-title">// SEQUENCE ARRANGEMENT</h2>
+          <div class="timeline-container">
+            <div class="timeline-section intro">INTRO</div>
+            <div class="timeline-section verse">VERSE</div>
+            <div class="timeline-section chorus">CHORUS</div>
+            <div class="timeline-section verse">VERSE</div>
+            <div class="timeline-section chorus">CHORUS</div>
+            <div class="timeline-section outro">OUTRO</div>
+          </div>
+          <button id="play-sequence" class="control-btn wide primary">PLAY SEQUENCE</button>
+        </div>
+      </div>
+
+      <!-- Interface Footer -->
+      <div class="interface-footer">
+        <div class="footer-line"></div>
+        <div class="footer-content">
+          <div class="footer-text">🌐 INSPIRE HQ — MESHSTORM OPS // FXBG LOCALNET // Offline Capable</div>
+          <div class="footer-code">VER.3.0.2</div>
+        </div>
+      </div>
     </div>
-    
-    <script>
-        (function() {
-            'use strict';
-            
-            // Setup audio context
-            var AudioContext = window.AudioContext || window.webkitAudioContext || false;
-            var context = AudioContext ? new AudioContext() : null;
-            
-            // Sound configuration
-            var BPM = 120;
-            var TICKS = 16;
-            var soundPrefix = 'https://blog.omgmog.net/beatmaker/sounds/';
-            var sounds = [
-                'bass_drum.wav',
-                'snare_drum.wav',
-                'low_tom.wav',
-                'mid_tom.wav',
-                'hi_tom.wav',
-                'rim_shot.wav',
-                'hand_clap.wav',
-                'cowbell.wav',
-                'cymbal.wav',
-                'o_hi_hat.wav',
-                'cl_hi_hat.wav',
-                'low_conga.wav',
-                'mid_conga.wav',
-                'hi_conga.wav',
-                'claves.wav',
-                'maracas.wav'
-            ];
-            
-            // UI elements
-            var tempoDisplay = document.getElementById('tempo-display');
-            var tempoSlider = document.getElementById('tempo-slider');
-            var tempoUp = document.getElementById('tempo-up');
-            var tempoDown = document.getElementById('tempo-down');
-            var playPause = document.getElementById('play-pause');
-            var clearBtn = document.getElementById('clear');
-            var randomBtn = document.getElementById('random');
-            var exportBtn = document.getElementById('export');
-            var beatGrid = document.getElementById('beat-grid');
-            var downloadLink = document.getElementById('download-link');
-            
-            // Sequencer state
-            var buffers = {};
-            var isPlaying = true;
-            var interval;
-            var currentTick = 0;
-            var lastTick = TICKS - 1;
-            
-            // Build the grid UI
-            function buildGrid() {
-                // For each sound
-                for (var r = 0; r < sounds.length; r++) {
-                    var soundName = sounds[r].split('.')[0];
-                    
-                    // Create label
-                    var label = document.createElement('div');
-                    label.className = 'sound-label';
-                    label.textContent = soundName.replace(/_/g, ' ');
-                    beatGrid.appendChild(label);
-                    
-                    // Create beat buttons
-                    for (var c = 0; c < TICKS; c++) {
-                        var btn = document.createElement('button');
-                        btn.className = 'beat-btn';
-                        btn.dataset.row = r;
-                        btn.dataset.col = c;
-                        
-                        // Click handler to toggle beat
-                        btn.addEventListener('click', function() {
-                            this.classList.toggle('on');
-                        });
-                        
-                        beatGrid.appendChild(btn);
-                    }
-                }
-            }
-            
-            // Play a sound
-            function playSound(index) {
-                if (!isPlaying) return;
-                
-                var url = soundPrefix + sounds[index];
-                
-                if (!AudioContext) {
-                    new Audio(url).play();
-                    return;
-                }
-                
-                if (typeof buffers[url] === 'undefined') {
-                    buffers[url] = null;
-                    var req = new XMLHttpRequest();
-                    req.open('GET', url, true);
-                    req.responseType = 'arraybuffer';
-                    
-                    req.onload = function() {
-                        context.decodeAudioData(req.response,
-                            function(buffer) {
-                                buffers[url] = buffer;
-                                playBuffer(buffer);
-                            },
-                            function(err) {
-                                console.error('Error decoding audio', err);
-                            }
-                        );
-                    };
-                    
-                    req.onerror = function() {
-                        console.error('Error loading sound', url);
-                    };
-                    
-                    req.send();
-                } else if (buffers[url]) {
-                    playBuffer(buffers[url]);
-                }
-                
-                function playBuffer(buffer) {
-                    var source = context.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(context.destination);
-                    source.start(0);
-                }
-            }
-            
-            // Clear all beats
-            function clearBeats() {
-                var onBeats = document.querySelectorAll('.beat-btn.on');
-                onBeats.forEach(function(beat) {
-                    beat.classList.remove('on');
-                });
-            }
-            
-            // Generate random pattern
-            function randomPattern() {
-                clearBeats();
-                
-                var buttons = document.querySelectorAll('.beat-btn');
-                buttons.forEach(function(btn) {
-                    if (Math.random() < 0.3) {
-                        btn.classList.add('on');
-                    }
-                });
-            }
-            
-            // Export pattern as JSON
-            function exportPattern() {
-                var pattern = {};
-                
-                // For each sound
-                for (var r = 0; r < sounds.length; r++) {
-                    var soundName = sounds[r].split('.')[0];
-                    var row = Array(TICKS).fill(0);
-                    
-                    // Check which beats are on
-                    for (var c = 0; c < TICKS; c++) {
-                        var btn = document.querySelector(`.beat-btn[data-row="${r}"][data-col="${c}"]`);
-                        if (btn && btn.classList.contains('on')) {
-                            row[c] = 1;
-                        }
-                    }
-                    
-                    // Group in sets of 4
-                    var groups = [];
-                    for (var i = 0; i < row.length; i += 4) {
-                        groups.push(row.slice(i, i + 4));
-                    }
-                    
-                    pattern[soundName] = groups;
-                }
-                
-                // Create download
-                var dataUrl = 'data:text/json;charset=utf-8,' + 
-                    encodeURIComponent(JSON.stringify(pattern, null, 2));
-                downloadLink.href = dataUrl;
-                downloadLink.download = 'beat-pattern.json';
-                downloadLink.click();
-            }
-            
-            // Update tempo
-            function updateTempo(newTempo) {
-                BPM = Math.max(60, Math.min(200, parseInt(newTempo)));
-                tempoDisplay.textContent = BPM;
-                tempoSlider.value = BPM;
-                
-                if (interval) {
-                    cancelAnimationFrame(interval.value);
-                    startSequencer();
-                }
-            }
-            
-            // Animation frame timing helper
-            function createInterval(callback, delay) {
-                var start = Date.now();
-                var handle = {};
-                
-                function loop() {
-                    var current = Date.now();
-                    var delta = current - start;
-                    
-                    if (delta >= delay) {
-                        callback();
-                        start = Date.now();
-                    }
-                    
-                    handle.value = requestAnimationFrame(loop);
-                }
-                
-                handle.value = requestAnimationFrame(loop);
-                return handle;
-            }
-            
-            // Start the sequencer
-            function startSequencer() {
-                var stepTime = 60000 / (BPM * 4);
-                
-                interval = createInterval(function() {
-                    // Remove previous ticked state
-                    document.querySelectorAll('.beat-btn.ticked').forEach(function(btn) {
-                        btn.classList.remove('ticked');
-                    });
-                    
-                    // Highlight current tick and play sounds
-                    for (var r = 0; r < sounds.length; r++) {
-                        var btn = document.querySelector(`.beat-btn[data-row="${r}"][data-col="${currentTick}"]`);
-                        if (btn) {
-                            btn.classList.add('ticked');
-                            if (btn.classList.contains('on')) {
-                                playSound(r);
-                            }
-                        }
-                    }
-                    
-                    // Move to next tick
-                    lastTick = currentTick;
-                    currentTick = (currentTick + 1) % TICKS;
-                }, stepTime);
-            }
-            
-            // Toggle play/pause
-            function togglePlayPause() {
-                isPlaying = !isPlaying;
-                
-                if (isPlaying) {
-                    playPause.textContent = '❚❚';
-                    if (context && context.state === 'suspended') {
-                        context.resume();
-                    }
-                    startSequencer();
-                } else {
-                    playPause.textContent = '▶';
-                    if (interval) {
-                        cancelAnimationFrame(interval.value);
-                    }
-                }
-            }
-            
-            // Initialize UI
-            buildGrid();
-            
-            // Event listeners
-            tempoSlider.addEventListener('input', function() {
-                updateTempo(this.value);
-            });
-            
-            tempoUp.addEventListener('click', function() {
-                updateTempo(parseInt(tempoDisplay.textContent) + 5);
-            });
-            
-            tempoDown.addEventListener('click', function() {
-                updateTempo(parseInt(tempoDisplay.textContent) - 5);
-            });
-            
-            playPause.addEventListener('click', togglePlayPause);
-            clearBtn.addEventListener('click', clearBeats);
-            randomBtn.addEventListener('click', randomPattern);
-            exportBtn.addEventListener('click', exportPattern);
-            
-            // Start automatically
-            startSequencer();
-            
-            // Enable audio context on first interaction
-            document.body.addEventListener('click', function() {
-                if (context && context.state === 'suspended') {
-                    context.resume();
-                }
-            }, { once: true });
-            
-            // Handle iframe communication
-            function updateParentHeight() {
-                if (window.parent && window.parent !== window) {
-                    window.parent.postMessage({ 
-                        height: document.body.scrollHeight 
-                    }, '*');
-                }
-            }
-            
-            window.addEventListener('load', updateParentHeight);
-            window.addEventListener('resize', updateParentHeight);
-            setInterval(updateParentHeight, 500);
-        })();
-    </script>
+  </div>
+
+  <!-- Mobile Menu Overlay (shown when mobile menu button is clicked) -->
+  <div class="mobile-menu-overlay">
+    <div class="mobile-menu-close">✕</div>
+    <div class="mobile-menu-content">
+      <a href="https://192.168.0.136" class="mobile-menu-item">🏠 HOME</a>
+      <a href="https://192.168.0.136:3000/" class="mobile-menu-item">📡 MESHTASTIC</a>
+      <a href="http://192.168.0.136:1880/ui/" class="mobile-menu-item">🔄 NODE-RED</a>
+      <a href="/index.html" class="mobile-menu-item">🛠️ TEAM TOOLS</a>
+      <a href="https://192.168.0.136:8080/" class="mobile-menu-item">🗄️ ARCHIVE</a>
+      <a href="https://192.168.0.136:9000/" class="mobile-menu-item">⚙️ ADMIN PANEL</a>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container" class="notification-container"></div>
+
+  <!-- IP Info Injection -->
+  <script src="/ip-info.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>
